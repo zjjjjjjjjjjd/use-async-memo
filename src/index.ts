@@ -1,6 +1,6 @@
-import {DependencyList, useEffect, useState} from 'react'
+import {DependencyList, Dispatch, SetStateAction, useEffect, useState} from 'react'
 
-export function useAsyncMemo<T>(factory: () => Promise<T> | undefined | null, deps: DependencyList, initial: T = undefined): T {
+export function useAsyncMemo<T>(factory: () => Promise<T> | undefined | null, deps: DependencyList, initial: T = undefined, returnSet: boolean = false): T | [T, Dispatch<SetStateAction<T>>] {
   const [val, setVal] = useState<T>(initial)
   useEffect(() => {
     let cancel = false
@@ -15,5 +15,5 @@ export function useAsyncMemo<T>(factory: () => Promise<T> | undefined | null, de
       cancel = true
     }
   }, deps)
-  return val
+  return !returnSet ? val : [val, setVal]
 }
